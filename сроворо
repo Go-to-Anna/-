@@ -1,0 +1,153 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import*
+from random import shuffle
+app = QApplication([])
+window = QWidget()
+
+window.setWindowTitle('Тест на психологию')
+window.resize(400, 400)
+
+question = QLabel('Как дела?')
+
+grop_ans = QGroupBox('варианты ответов')
+grop_res = QGroupBox('результаты')
+baton = QPushButton('Ответить')
+
+ans1 = QRadioButton('мама')
+ans2 = QRadioButton('хорошо')
+ans3 = QRadioButton('я дома')
+ans4 = QRadioButton('плёхё')
+
+res = QLabel('Правильно/Нет')
+right_answer = QLabel('Правильный ответ')
+
+h1 = QHBoxLayout()
+h2 = QHBoxLayout()
+h3 = QHBoxLayout()
+v1 = QVBoxLayout()
+
+h4 = QHBoxLayout()
+h5 = QHBoxLayout()
+v2 = QVBoxLayout()
+
+v3 = QVBoxLayout()
+
+h4.addWidget(ans1)
+h4.addWidget(ans2)
+h5.addWidget(ans3)
+h5.addWidget(ans4)
+
+v2.addLayout(h4)
+v2.addLayout(h5)
+
+grop_ans.setLayout(v2)
+
+v3.addWidget(res)
+v3.addWidget(right_answer)
+
+grop_res.setLayout(v3)
+
+h1.addWidget(question)
+h2.addWidget(grop_ans)
+h2.addWidget(grop_res)
+h3.addWidget(baton)
+
+v1.addLayout(h1)
+v1.addLayout(h2)
+v1.addLayout(h3)
+
+
+window.setLayout(v1)
+
+grop_res.hide()
+
+def check_res():
+    grop_ans.hide()
+    grop_res.check()
+    baton.setText('Следующий вопрос')
+
+def ask_que():
+    grop_res.hide()
+    grop_ans.check()
+    baton.setText('Ответить')
+    
+
+def analysis_click():
+    if baton.text() == 'Ответить':
+        check_ans()
+
+    else:
+        ask_que()
+
+baton.clicked.connect(analysis_click)
+
+class QueInfo:
+    def __init__(self, question, right, wrong1, wrong2, wrong3):
+        self.question = question
+        self.right = right
+        self.wrong1 = wrong1
+        self.wrong2 = wrong2
+        self.wrong3 = wrong3
+
+lst_quest = []
+
+qu_qu = QueInfo('2 + 2?', '4', '2', '22', '8')
+lst_quest.append(qu_qu)
+
+qu_qu = QueInfo('Чему равно 1м?', '100 см', '1 кг', '5 литров', '1000 км')
+lst_quest.append(qu_qu)
+
+lst_ans = [ans1, ans2, ans3, ans4]
+
+
+def ask_que():
+    shuffle(lst_quest)
+    que = lst_quest[0]
+
+    shuffle(lst_ans)
+    lst_ans[0].setText(que.right)
+    lst_ans[1].setText(que.wrong1)
+    lst_ans[2].setText(que.wrong2)
+    lst_ans[3].setText(que.wrong3)
+
+
+
+    question.setText(que.question)
+    right_answer.setText(que.right)
+    show_ans()
+
+def check_ans():
+    if lst_ans[0].isChecked():
+        res.setText('Правильно')
+        show_res()
+
+    if lst_ans[1].isChecked() or lst_ans[2].isChecked() or lst_ans[3].isChecked():
+        res.setText('НЕправильно')
+        show_res()  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ask_que()
+
+baton.clicked.connect(analysis_click)
+window.show()
+app.exec_()
+
+
+
+
+
+
+
